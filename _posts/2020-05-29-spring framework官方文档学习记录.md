@@ -12,9 +12,9 @@ tags:
     - 学习
 
 ---
-依据官方文档编写：<https://docs.spring.io/spring/docs/5.3.0-SNAPSHOT/spring-framework-reference/>
+依据官方文档：<https://docs.spring.io/spring/docs/5.3.0-SNAPSHOT/spring-framework-reference/>
 
-仅是个人学习纪律，故存在大量错误！
+仅是个人学习记录，存在大量错误！
 
 # part II：core
 
