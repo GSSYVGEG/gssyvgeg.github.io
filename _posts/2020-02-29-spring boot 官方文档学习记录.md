@@ -240,6 +240,53 @@ public class MyService {
 
 ## 26. Testing
 
+在这里总结一下spring boot程序测试。
+
+单元测试通常会用到mock对象。组成一个程序的代码单元可能成千上万，所以一般只对核心逻辑等部分作单元测试。其他部分用集成测试包括在内。
+
+下面列举一个集成测试的例子，可能会持续优化：
+
+~~~ java
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@ContextConfiguration(classes = xxx.class)  //加载配置类
+//@ActiveProfiles("dev")  //当bean具有@Profile("dev")注解时，才会在ApplicationContext加载时be active
+//@TestPropertySource(locations = "classpath:application-dev.yml")  //加载测试用的配置
+public class IntegrationTest {
+    @Autowired
+    TestRestTemplate restTemplate;
+
+    @Test
+    void testExample() throws Exception {
+        ResponseEntity<String> response = restTemplate.getForEntity("/music/api/lrc/5", String.class);
+        assertEquals(response.getStatusCode(), HttpStatus.OK);
+
+        //ObjectMapper objectMapper = new ObjectMapper();
+        boolean b = response.getBody().contains("翩翩一叶扁舟");
+        System.out.println(response.getBody());
+        assertTrue(b);
+    }
+}
+~~~
+
++ Q：使用MockMvc还是TestRestTemplate?
+
+  A：官网描述是：
+
+  > If you have web endpoints that you want to test against this mock environment, you can additionally configure [`MockMvc`](https://docs.spring.io/spring/docs/5.2.6.RELEASE/spring-framework-reference/testing.html#spring-mvc-test-framework) 
+
+  MockMvc使用在mock环境中，也就是@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)时。
+
+  所以它无法测试到一些底层的servlet行为。（在26.3.5中有具体描述）
+
+  也就是说MockMvc能替代TestRestTemplate的大部分功能，但后者更为全面，更稳妥。所以在集成测试中最好用TestRestTemplate。
+
+最后列举一些参考文章：
+
++ [springboot test 人类使用指南](https://zhuanlan.zhihu.com/p/111418479)
++ [Spring Boot中的测试](https://zhuanlan.zhihu.com/p/139398204)
++ [一文教会你如何在Spring中进行集成测试，太赞了](<https://zhuanlan.zhihu.com/p/128510132>) 解释了一些常用注解
++ [基于spring-boot的单元和集成测试方案](https://zhuanlan.zhihu.com/p/67801427) 非常详细的介绍！
+
 ### 26.3 Testing Spring Boot Applications
 
 spring boot 提供@SpringBootTest注解来标注测试类。
@@ -304,7 +351,7 @@ spring boot会利用spring-boot-test-autoconfigure模块，自动完成以上效
 
 #### 26.3.12 Auto-configured Spring MVC Tests @WebMvcTest
 
-这个注解时@SpringBootTest针对controller层测试的具体化注解之一。
+这个注解是@SpringBootTest针对controller层测试的具体化注解之一。
 
 它主要针对@controller、Filter、HandlerInterceptor等，测试他们的功能是否正常。例如spring security的功能是否正常。
 
