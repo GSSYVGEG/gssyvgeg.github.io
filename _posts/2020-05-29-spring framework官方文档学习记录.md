@@ -2,7 +2,7 @@
 
 layout:     post
 title:      spring framework 官方文档学习记录
-subtitle:   0530持续更新中...
+subtitle:   0530持续更新中... 
 date:       2020-05-29
 author:     有林
 header-img: img/home-bg-o.jpg
