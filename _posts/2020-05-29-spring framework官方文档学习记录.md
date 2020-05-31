@@ -2,7 +2,7 @@
 
 layout:     post
 title:      spring framework 官方文档学习记录
-subtitle:   测试用
+subtitle:   0530持续更新中...
 date:       2020-05-29
 author:     有林
 header-img: img/home-bg-o.jpg
@@ -1005,7 +1005,15 @@ Decoder：编码器。帮我们管理了缓冲区数据，包括释放缓冲区�
 
 ### 2.1 Mock Objects 仿冒对象
 
+## 3 Integration Testing
 
+### 3.6 Spring MVC Test Framework
+
+#### 3.6.1 Server-Side tests
+
++ Performing Requests
+
+  详细介绍mockMvc.perform()的用法。//TODO:待详细列出
 
 
 
