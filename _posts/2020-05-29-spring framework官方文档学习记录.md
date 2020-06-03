@@ -16,6 +16,10 @@ tags:
 
 仅是个人学习记录，存在大量错误！
 
+[TOC]
+
+
+
 # part II：core
 
 ### 1.3 bean overview
@@ -37,7 +41,7 @@ tags:
 
 基于xml文件的configuration metadata，bean有id属性作为唯一名称，有name属性作为别名。
 
-若不值得id和name，IoC container将为bean生成驼峰命名方式的名称。
+若不设置id和name，IoC container将为bean自动生成驼峰命名方式的名称。
 
 #### 1.3.2 Instantiation Beans 初始化bean
 
@@ -276,6 +280,8 @@ spring可以通过检查ApplicationContext 的内容，自动解析bean之间的
 
 #### 1.5.1 The Singleton Scope  单例范围
 
+默认是单例。
+
 类似于单例模式。
 
 ioc容器创建的实例对象是单例，即返回的实例是内存中存储的同一个对象。
@@ -286,7 +292,7 @@ ioc容器创建的实例对象是单例，即返回的实例是内存中存储�
 
 例子：数据访问对象，即DAO对象通常不会设置为原型范围。通常设为单例。
 
-### ！1.9 Annotation-based Container Configuration 注解
+### 1.9 Annotation-based Container Configuration 注解
 
 注解方式和xml方式，哪个更好？
 
@@ -341,7 +347,7 @@ public class SimpleMovieLister {
 
 #### 1.9.3 @Primary 微调
 
-在@Bean出增加@Primary，就会被自动连线优先匹配到。
+在@Bean处增加@Primary，就会被自动连线优先匹配到。
 
 ```java
 @Configuration
@@ -378,6 +384,49 @@ public class MovieRecommender {
 ```
 
 不知道为什么，给bean指定qualifier限定值，官方文档写的是xml方式而不是注解方式。这个问题在文档1.10.8中解答。
+
+
+
+Spring提供@Qualifier的一系列方式（1.9.3、1.9.4），让开发者可以自由指定@Autowired时注入的实例。但始终仅限于“开发者”。用户是无法指定或选择实例的。下面是一种实现思路：
+
+~~~java
+@Component
+public class MusicService {
+    @Autowired
+    private ApplicationContext context;
+
+    private MusicTagScraper getMusicTagScraper(ApiType apiType){
+        return (MusicTagScraper) context.getBean(apiType.getClazz());
+    }
+
+    void getTag(ApiType apiType){
+      getMusicTagScraper(apiType).getTag();
+    }
+}
+~~~
+
+~~~java
+public enum ApiType {
+    WANYI(WanyiMusicTagScraper.class),
+    QQ(QqMusicTagScraper.class);
+
+    private Class clazz;
+
+    public Class getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(Class clazz) {
+        this.clazz = clazz;
+    }
+
+    private ApiType(Class musicTagScraperClass) {
+        this.clazz = musicTagScraperClass;
+    }
+}
+~~~
+
+通过让用户指定ApiType，程序就可以根据ApiType中包含的实例Class信息，向ioc容器申请需要的实例。
 
 #### 1.9.7 @Resource
 
