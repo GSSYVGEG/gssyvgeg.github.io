@@ -14,10 +14,6 @@ tags:
 ---
 根据官方文档编写：<https://docs.spring.io/spring-boot/docs/2.3.0.RELEASE/reference/html/index.html>
 
-[TOC]
-
-
-
 # part IV. Using Spring Boot
 
 ## 2. Structuring Your Code 构建你的代码
