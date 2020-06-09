@@ -192,6 +192,60 @@ spring boot启动时，会自动配置一个 ObjectMapper 的bean。
 
 如需修改ObjectMapper配置，参考 part 10.“How-to” Guides的4.3 Customize the Jackson ObjectMapper
 
+## 7.Developing Web Applications
+
+### 7.1 The "Spring Web MVC Framework"
+
+#### 7.1.5 Static Content 静态资源
+
++ spring boot默认的静态资源文件路径是：
+
+```
+classpath:/META-INF/resources/,
+classpath:/resources/, 
+classpath:/static/, 
+classpath:/public/
+```
+
+​	默认配置在ResourceHttpRequestHandler中。
+
+​	所以可以添加自己的WebMvcConfigurer，并重写addResourceHandlers方法，来覆盖上面默认的4个静态资源文件路径。
+
+~~~java
+@Configuration
+public class WebMvcConfig extends WebMvcConfigurerAdapter {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //将所有C:/Users/gzpost05/Desktop/springboot博客/ 访问都映射到/myTest/** 
+        registry.addResourceHandler("/myTest/**").addResourceLocations("file:C:/Users/gzpost05/Desktop/springboot博客/");
+    }
+}
+~~~
+
+
+
+​	或者在主配置文件中，配置spring.resources.static-locations，也可覆盖默认的静态资源文件路径。
+
+~~~properties
+spring.mvc.static-path-pattern=/**
+spring.resources.static-locations=classpath:/META-INF/resources/,classpath:/resources/,\
+  classpath:/static/,classpath:/public/,file:${web.upload-path}
+  
+web.upload-path=C:/Users/gzpost05/Desktop/test/
+~~~
+
+
+
++ 静态资源的url默认映射是 /***。
+
+  可以在主配置文件中，配置spring.mvc.static-path-pattern，来修改映射路径。
+
++ 特别的，Webjars包资源，url将会被映射在 /webjar/**
+
+
+
+
+
 ## 15. Calling REST Services with RestTemplate
 
 官网文档restTemplate对象的注入采用的是RestTemplateBuilder的方式。
@@ -542,7 +596,6 @@ class SampleWebClientTests {
             return new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(1))
                     .setReadTimeout(Duration.ofSeconds(1));
         }
-
     }
 }
 ```
