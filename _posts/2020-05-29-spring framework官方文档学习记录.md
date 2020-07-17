@@ -539,6 +539,8 @@ public class AppConfig {
 
 介绍AnnotationConfigApplicationContext类的使用。
 
+使用@Configuration注解标注了配置类后（示例在1.12.1），根据该配置类，创建Context。
+
 + 简单使用
 
   ~~~java
@@ -548,6 +550,20 @@ public class AppConfig {
       myService.doStuff();
   }
   ~~~
+
++ 组件扫描
+
+  ~~~java
+  @Configuration
+  @ComponentScan(basePackages = "com.acme") 
+  public class AppConfig  {
+      ...
+  }
+  ~~~
+
+  
+
+
 
 #### 1.12.3 Using the @Bean Annotation
 
